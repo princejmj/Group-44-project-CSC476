@@ -1,0 +1,85 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UI Ventures Marketing Insights Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{--bg:#eef2f7;--card:#fff;--text:#1b2a3a;--muted:#6b7a8d;--brand:#1f4e79;--accent:#c55a11;--grid:#e3e8ef;--shadow:0 4px 14px #1f4e7914}
+[data-theme=dark]{--bg:#0e1621;--card:#17222f;--text:#e6edf5;--muted:#93a4b8;--brand:#6fb1ea;--accent:#f0955a;--grid:#2a3848;--shadow:0 4px 14px #0006}
+*{box-sizing:border-box}body{font-family:Inter,Segoe UI,Arial,sans-serif;margin:0;background:var(--bg);color:var(--text);transition:background .3s,color .3s}
+header{background:linear-gradient(120deg,#12365a,#2e75b6);color:#fff;padding:22px 28px;display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between}
+h1{font-size:21px;margin:0}header small{opacity:.85}.tools{display:flex;gap:8px;flex-wrap:wrap}
+button,select{font:inherit;border-radius:8px;border:1px solid #fff5;padding:7px 12px;cursor:pointer}
+header button{background:#ffffff22;color:#fff}header button:hover{background:#ffffff40}
+.bar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;padding:14px 28px;position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--grid)}
+.bar label{font-size:12px;color:var(--muted);display:flex;flex-direction:column;gap:3px}.bar select{background:var(--card);color:var(--text);border-color:var(--grid)}
+.k{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:14px;padding:18px 28px 6px}
+.c{background:var(--card);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow);border-top:4px solid var(--brand);font-size:13px;color:var(--muted)}
+.c b{display:block;font-size:24px;color:var(--text);margin:4px 0}.up{color:#2e9e5b}.dn{color:#d64545}
+.g{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:16px;padding:12px 28px}
+.p{background:var(--card);border-radius:12px;padding:14px;box-shadow:var(--shadow);animation:in .5s both}.p h3{margin:0 0 10px;font-size:14px}.wide{grid-column:1/-1}
+@keyframes in{from{opacity:0;transform:translateY(10px)}}
+.i{margin:8px 28px 30px;background:var(--card);border-left:5px solid var(--accent);padding:12px 20px;border-radius:10px;box-shadow:var(--shadow)}.i li{margin:6px 0;line-height:1.45}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:0 0 24px}
+@media print{.bar,.tools{display:none}body{background:#fff}}
+</style></head><body>
+<header><div><h1>Marketing Insights Dashboard: UI Ventures Limited</h1><small>CSC 476 Group 44, University of Ibadan. Prototype on simulated sample data</small></div>
+<div class="tools"><button id="csv">Export CSV</button><button id="prt">Print / PDF</button><button id="theme">Dark mode</button></div></header>
+<div class="bar"><label>From<select id="from"></select></label><label>To<select id="to"></select></label><label>Division<select id="div"></select></label><label>&nbsp;<button id="reset" style="background:var(--card);color:var(--text);border-color:var(--grid)">Reset filters</button></label></div>
+<div class="k" id="k"></div><div class="g">
+<div class="p wide"><h3>Monthly revenue with 3-month trend projection (NGN m)</h3><canvas id="b" height="90"></canvas></div>
+<div class="p"><h3>Revenue by division (NGN m)</h3><canvas id="a"></canvas></div>
+<div class="p"><h3>Hotel bookings by channel</h3><canvas id="c"></canvas></div>
+<div class="p"><h3>Website enquiry conversion by source (%)</h3><canvas id="d"></canvas></div>
+<div class="p"><h3>Cost per lead by campaign channel (NGN)</h3><canvas id="e"></canvas></div>
+<div class="p"><h3>Net Promoter Score by division</h3><canvas id="f"></canvas></div></div>
+<div class="i"><b>Auto-generated insights</b><ul id="ins"></ul></div>
+<footer>Filters apply to revenue figures. Website, campaign, hotel and NPS figures cover the full dataset.</footer>
+<script>const K={"total_revenue": 3382233000.0, "rev_by_div": {"U.I. Petrol Station": 1364910000.0, "U.I. Hotels": 924336000.0, "U&I Fast Food/Bakery": 534327000.0, "U.I. Printing Press": 340223000.0, "Consultancy/Training": 218437000.0}, "monthly_rev": {"2025-01": 130042000.0, "2025-02": 145362000.0, "2025-03": 159392000.0, "2025-04": 152137000.0, "2025-05": 138341000.0, "2025-06": 144465000.0, "2025-07": 164374000.0, "2025-08": 124931000.0, "2025-09": 130086000.0, "2025-10": 154987000.0, "2025-11": 167300000.0, "2025-12": 141845000.0, "2026-01": 156350000.0, "2026-02": 163309000.0, "2026-03": 177654000.0, "2026-04": 158402000.0, "2026-05": 166323000.0, "2026-06": 161898000.0, "2026-07": 186061000.0, "2026-08": 136784000.0, "2026-09": 144392000.0, "2026-10": 177798000.0}, "peak_month": 7, "low_month": 8, "season_gap_pct": 33.899470798387554, "hotel_channels": {"Corporate/University": {"bookings": 1118, "avg_value": 86415.02683363149, "cross_rate": 0.18962432915921287}, "Phone call": {"bookings": 810, "avg_value": 86012.34567901235, "cross_rate": 0.2074074074074074}, "Third-party listing": {"bookings": 287, "avg_value": 89599.3031358885, "cross_rate": 0.24738675958188153}, "Walk-in": {"bookings": 1166, "avg_value": 87566.89536878216, "cross_rate": 0.1758147512864494}, "Website form": {"bookings": 219, "avg_value": 89187.21461187214, "cross_rate": 0.2511415525114155}}, "web": {"Direct": {"sessions": 18877, "enq": 498, "cr": 2.63813105896064}, "Facebook": {"sessions": 11939, "enq": 97, "cr": 0.8124633553898987}, "Google search": {"sessions": 24021, "enq": 487, "cr": 2.0273926980558676}, "Instagram": {"sessions": 9664, "enq": 91, "cr": 0.9416390728476821}, "Referral (UI sites)": {"sessions": 6768, "enq": 110, "cr": 1.6252955082742315}}, "campaign": {"Email/WhatsApp broadcast": {"spend": 175739.0, "leads": 640, "cpl": 274.5921875}, "Facebook posts/ads": {"spend": 1309130.0, "leads": 768, "cpl": 1704.5963541666667}, "Flyers/Banners on campus": {"spend": 1872952.0, "leads": 522, "cpl": 3588.030651340996}, "Instagram": {"spend": 982139.0, "leads": 698, "cpl": 1407.0759312320918}, "Radio/Event sponsorship": {"spend": 3375558.0, "leads": 915, "cpl": 3689.1344262295083}}, "nps": {"Consultancy/Training": 7.727272727272733, "U&I Fast Food/Bakery": -13.63636363636364, "U.I. Hotels": -21.363636363636363, "U.I. Petrol Station": -37.72727272727273, "U.I. Printing Press": -14.090909090909093}, "web_total_sessions": 71269, "web_total_enq": 1283, "web_share_hotel_bookings_pct": 6.083333333333334, "cross_rate_overall": 19.75};
+const D={"months": ["2025-01", "2025-02", "2025-03", "2025-04", "2025-05", "2025-06", "2025-07", "2025-08", "2025-09", "2025-10", "2025-11", "2025-12", "2026-01", "2026-02", "2026-03", "2026-04", "2026-05", "2026-06", "2026-07", "2026-08", "2026-09", "2026-10"], "divs": ["Consultancy/Training", "U&I Fast Food/Bakery", "U.I. Hotels", "U.I. Petrol Station", "U.I. Printing Press"], "rev": {"Consultancy/Training": [8410000.0, 9265000.0, 11066000.0, 9567000.0, 9016000.0, 9819000.0, 10756000.0, 7411000.0, 7416000.0, 8984000.0, 11687000.0, 8506000.0, 9241000.0, 10181000.0, 11870000.0, 9845000.0, 9912000.0, 12102000.0, 13355000.0, 8861000.0, 9513000.0, 11654000.0], "U&I Fast Food/Bakery": [22204000.0, 24256000.0, 24487000.0, 22347000.0, 23588000.0, 24054000.0, 24804000.0, 19121000.0, 20720000.0, 22280000.0, 25707000.0, 20434000.0, 23010000.0, 25060000.0, 29701000.0, 25945000.0, 28654000.0, 26168000.0, 26181000.0, 23633000.0, 24424000.0, 27549000.0], "U.I. Hotels": [33773000.0, 36502000.0, 47459000.0, 42300000.0, 38548000.0, 38922000.0, 49291000.0, 31744000.0, 38021000.0, 44054000.0, 46512000.0, 39004000.0, 42907000.0, 39762000.0, 44253000.0, 44763000.0, 45091000.0, 46287000.0, 49695000.0, 37907000.0, 34895000.0, 52646000.0], "U.I. Petrol Station": [50928000.0, 61368000.0, 61430000.0, 62824000.0, 52575000.0, 56205000.0, 62374000.0, 53922000.0, 50673000.0, 63790000.0, 65279000.0, 60033000.0, 65238000.0, 72860000.0, 73059000.0, 62165000.0, 67364000.0, 63138000.0, 78106000.0, 52635000.0, 61329000.0, 67615000.0], "U.I. Printing Press": [14727000.0, 13971000.0, 14950000.0, 15099000.0, 14614000.0, 15465000.0, 17149000.0, 12733000.0, 13256000.0, 15879000.0, 18115000.0, 13868000.0, 15954000.0, 15446000.0, 18771000.0, 15684000.0, 15302000.0, 14203000.0, 18724000.0, 13748000.0, 14231000.0, 18334000.0]}};
+const $=id=>document.getElementById(id),M=D.months,DV=D.divs,n=x=>x.toLocaleString(undefined,{maximumFractionDigits:0});
+const PAL=['#1f4e79','#2e75b6','#9dc3e6','#c55a11','#7f7f7f'];
+M.forEach(m=>{$('from').add(new Option(m,m));$('to').add(new Option(m,m))});
+DV.forEach(d=>$('div').add(new Option(d,d)));$('div').add(new Option('All divisions','all'),0);
+function reset(){$('from').value=M[0];$('to').value=M[M.length-1];$('div').value='all'}reset();
+function nxt(m,k){let[y,mo]=m.split('-').map(Number),o=[];for(let i=0;i<k;i++){mo++;if(mo>12){mo=1;y++}o.push(y+'-'+String(mo).padStart(2,'0'))}return o}
+function fc(y,k){const L=y.length;if(L<4)return[];const xm=(L-1)/2,ym=y.reduce((a,b)=>a+b)/L;let sxy=0,sxx=0;y.forEach((v,i)=>{sxy+=(i-xm)*(v-ym);sxx+=(i-xm)**2});const s=sxy/sxx;return Array.from({length:k},(_,j)=>ym+s*(L+j-xm))}
+function view(){const a=M.indexOf($('from').value),b=M.indexOf($('to').value),lo=Math.min(a,b),hi=Math.max(a,b),ds=$('div').value==='all'?DV:[$('div').value];
+ return{lo,hi,idx:M.slice(lo,hi+1),ds,tot:M.slice(lo,hi+1).map((m,i)=>ds.reduce((s,d)=>s+D.rev[d][lo+i],0))}}
+const charts={};
+function chart(id,type,labels,data,col,extra){const grid=getComputedStyle(document.documentElement).getPropertyValue('--grid');
+ Chart.defaults.color=getComputedStyle(document.documentElement).getPropertyValue('--muted');
+ const sets=Array.isArray(data[0])||typeof data[0]==='object'&&data[0]!==null?data:[{data,backgroundColor:col,borderColor:col,borderRadius:5}];
+ if(charts[id]){const c=charts[id];c.data.labels=labels;c.data.datasets=sets;['x','y'].forEach(s=>{if(c.options.scales[s])c.options.scales[s].grid.color=grid});c.update();return}
+ charts[id]=new Chart($(id),{type,data:{labels,datasets:sets},options:Object.assign({plugins:{legend:{display:sets.length>1||type==='doughnut'}},animation:{duration:700},
+  scales:type==='doughnut'?{}:{x:{grid:{color:grid}},y:{grid:{color:grid}}}},extra||{})})}
+function count(el,to,fmt){const t0=performance.now();(function f(t){const p=Math.min(1,(t-t0)/600);el.textContent=fmt(to*p);if(p<1)requestAnimationFrame(f)})(t0)}
+function render(){const v=view(),tot=v.tot.reduce((a,b)=>a+b,0),avg=tot/v.tot.length,L=v.tot.length,
+ mom=L>1?(v.tot[L-1]/v.tot[L-2]-1)*100:null;
+ const cards=[['Revenue in selection',tot,x=>'NGN '+(x/1e9).toFixed(2)+' bn','across '+L+' month(s)'],['Average per month',avg,x=>'NGN '+(x/1e6).toFixed(1)+' m',v.ds.length>1?'all divisions':v.ds[0]],
+ ['Latest month vs previous',mom,x=>(x>=0?'+':'')+x.toFixed(1)+'%',mom===null?'need 2+ months':'month on month'],['Seasonal swing',K.season_gap_pct,x=>x.toFixed(0)+'%','peak vs low month'],
+ ['Website share of bookings',K.web_share_hotel_bookings_pct,x=>x.toFixed(1)+'%','online booking uptake'],['Guests using a 2nd division',K.cross_rate_overall,x=>x.toFixed(1)+'%','cross-selling rate']];
+ $('k').innerHTML=cards.map((c,i)=>'<div class="c">'+c[0]+'<b id="kv'+i+'"></b><span class="'+(i==2&&c[1]!==null?(c[1]>=0?'up':'dn'):'')+'">'+c[3]+'</span></div>').join('');
+ cards.forEach((c,i)=>c[1]===null?$('kv'+i).textContent='n/a':count($('kv'+i),c[1],c[2]));
+ const f=fc(v.tot,3),fl=nxt(v.idx[L-1],f.length),m6=x=>x/1e6;
+ chart('b','line',v.idx.concat(fl),[{label:'Actual',data:v.tot.map(m6).concat(f.map(()=>null)),borderColor:PAL[0],backgroundColor:'#2e75b633',fill:true,tension:.3,pointRadius:2},
+  {label:'Trend projection',data:v.tot.map((x,i)=>i==L-1?m6(x):null).concat(f.map(m6)),borderColor:PAL[3],borderDash:[6,5],tension:.3,pointRadius:3}]);
+ const dv=DV.map(d=>D.rev[d].slice(v.lo,v.hi+1).reduce((a,b)=>a+b,0)/1e6);
+ chart('a','doughnut',DV,[{data:dv,backgroundColor:PAL.concat(['#548235']),borderWidth:0}],null,{cutout:'60%'});
+ const top=DV[dv.indexOf(Math.max(...dv))],bi=v.tot.indexOf(Math.max(...v.tot)),wi=v.tot.indexOf(Math.min(...v.tot));
+ const web=Object.keys(K.web),cmp=Object.keys(K.campaign),best=web.reduce((a,b)=>K.web[a].cr>K.web[b].cr?a:b),cheap=cmp.reduce((a,b)=>K.campaign[a].cpl<K.campaign[b].cpl?a:b),dear=cmp.reduce((a,b)=>K.campaign[a].cpl>K.campaign[b].cpl?a:b);
+ const nl=Object.keys(K.nps),lowN=nl.reduce((a,b)=>K.nps[a]<K.nps[b]?a:b);
+ $('ins').innerHTML=['In the selected period '+top+' earns the most ('+(Math.max(...dv)/dv.reduce((a,b)=>a+b)*100).toFixed(0)+'% of revenue). Best month: '+v.idx[bi]+' (NGN '+n(v.tot[bi]/1e6)+' m); weakest: '+v.idx[wi]+' (NGN '+n(v.tot[wi]/1e6)+' m).',
+ 'Revenue is seasonal: months '+K.peak_month+' and '+K.low_month+' (peak vs low) differ by about '+K.season_gap_pct.toFixed(0)+'%, so promotions should be timed ahead of low months.',
+ 'Highest website conversion: '+best+' ('+K.web[best].cr.toFixed(1)+'%). Lowest cost per lead: '+cheap+' (NGN '+n(K.campaign[cheap].cpl)+'); highest: '+dear+' (NGN '+n(K.campaign[dear].cpl)+'). Shift budget toward '+cheap+'.',
+ 'Only '+K.web_share_hotel_bookings_pct.toFixed(1)+'% of hotel bookings use the website form, so online booking is under-used.',
+ 'Lowest customer advocacy: '+lowN+' (NPS '+K.nps[lowN].toFixed(0)+'). Prioritise service improvements there.'].map(t=>'<li>'+t+'</li>').join('')}
+const hc=Object.keys(K.hotel_channels),wl=Object.keys(K.web),cl=Object.keys(K.campaign),nl=Object.keys(K.nps);
+function static_(){chart('c','bar',hc,hc.map(k=>K.hotel_channels[k].bookings),PAL[1]);chart('d','bar',wl,wl.map(k=>K.web[k].cr),PAL[3]);chart('e','bar',cl,cl.map(k=>K.campaign[k].cpl),PAL[0]);
+ chart('f','bar',nl,nl.map(k=>K.nps[k]),nl.map(k=>K.nps[k]>=0?'#2e9e5b':'#d64545'))}
+function all(){render();static_()}
+['from','to','div'].forEach(i=>$(i).onchange=render);$('reset').onclick=()=>{reset();render()};
+$('theme').onclick=()=>{const d=document.documentElement.dataset.theme==='dark';document.documentElement.dataset.theme=d?'light':'dark';$('theme').textContent=d?'Dark mode':'Light mode';try{localStorage.setItem('uiv-theme',d?'light':'dark')}catch(e){}all()};
+try{if(localStorage.getItem('uiv-theme')==='dark'){document.documentElement.dataset.theme='dark';$('theme').textContent='Light mode'}}catch(e){}
+$('prt').onclick=()=>window.print();
+$('csv').onclick=()=>{const v=view(),rows=['month,revenue_ngn'].concat(v.idx.map((m,i)=>m+','+v.tot[i]));const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([rows.join('\n')],{type:'text/csv'}));a.download='revenue_selection.csv';a.click()};
+all();
+</script></body></html>

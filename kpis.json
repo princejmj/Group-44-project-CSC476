@@ -1,0 +1,129 @@
+{
+ "total_revenue": 3382233000.0,
+ "rev_by_div": {
+  "U.I. Petrol Station": 1364910000.0,
+  "U.I. Hotels": 924336000.0,
+  "U&I Fast Food/Bakery": 534327000.0,
+  "U.I. Printing Press": 340223000.0,
+  "Consultancy/Training": 218437000.0
+ },
+ "monthly_rev": {
+  "2025-01": 130042000.0,
+  "2025-02": 145362000.0,
+  "2025-03": 159392000.0,
+  "2025-04": 152137000.0,
+  "2025-05": 138341000.0,
+  "2025-06": 144465000.0,
+  "2025-07": 164374000.0,
+  "2025-08": 124931000.0,
+  "2025-09": 130086000.0,
+  "2025-10": 154987000.0,
+  "2025-11": 167300000.0,
+  "2025-12": 141845000.0,
+  "2026-01": 156350000.0,
+  "2026-02": 163309000.0,
+  "2026-03": 177654000.0,
+  "2026-04": 158402000.0,
+  "2026-05": 166323000.0,
+  "2026-06": 161898000.0,
+  "2026-07": 186061000.0,
+  "2026-08": 136784000.0,
+  "2026-09": 144392000.0,
+  "2026-10": 177798000.0
+ },
+ "peak_month": 7,
+ "low_month": 8,
+ "season_gap_pct": 33.899470798387554,
+ "hotel_channels": {
+  "Corporate/University": {
+   "bookings": 1118,
+   "avg_value": 86415.02683363149,
+   "cross_rate": 0.18962432915921287
+  },
+  "Phone call": {
+   "bookings": 810,
+   "avg_value": 86012.34567901235,
+   "cross_rate": 0.2074074074074074
+  },
+  "Third-party listing": {
+   "bookings": 287,
+   "avg_value": 89599.3031358885,
+   "cross_rate": 0.24738675958188153
+  },
+  "Walk-in": {
+   "bookings": 1166,
+   "avg_value": 87566.89536878216,
+   "cross_rate": 0.1758147512864494
+  },
+  "Website form": {
+   "bookings": 219,
+   "avg_value": 89187.21461187214,
+   "cross_rate": 0.2511415525114155
+  }
+ },
+ "web": {
+  "Direct": {
+   "sessions": 18877,
+   "enq": 498,
+   "cr": 2.63813105896064
+  },
+  "Facebook": {
+   "sessions": 11939,
+   "enq": 97,
+   "cr": 0.8124633553898987
+  },
+  "Google search": {
+   "sessions": 24021,
+   "enq": 487,
+   "cr": 2.0273926980558676
+  },
+  "Instagram": {
+   "sessions": 9664,
+   "enq": 91,
+   "cr": 0.9416390728476821
+  },
+  "Referral (UI sites)": {
+   "sessions": 6768,
+   "enq": 110,
+   "cr": 1.6252955082742315
+  }
+ },
+ "campaign": {
+  "Email/WhatsApp broadcast": {
+   "spend": 175739.0,
+   "leads": 640,
+   "cpl": 274.5921875
+  },
+  "Facebook posts/ads": {
+   "spend": 1309130.0,
+   "leads": 768,
+   "cpl": 1704.5963541666667
+  },
+  "Flyers/Banners on campus": {
+   "spend": 1872952.0,
+   "leads": 522,
+   "cpl": 3588.030651340996
+  },
+  "Instagram": {
+   "spend": 982139.0,
+   "leads": 698,
+   "cpl": 1407.0759312320918
+  },
+  "Radio/Event sponsorship": {
+   "spend": 3375558.0,
+   "leads": 915,
+   "cpl": 3689.1344262295083
+  }
+ },
+ "nps": {
+  "Consultancy/Training": 7.727272727272733,
+  "U&I Fast Food/Bakery": -13.63636363636364,
+  "U.I. Hotels": -21.363636363636363,
+  "U.I. Petrol Station": -37.72727272727273,
+  "U.I. Printing Press": -14.090909090909093
+ },
+ "web_total_sessions": 71269,
+ "web_total_enq": 1283,
+ "web_share_hotel_bookings_pct": 6.083333333333334,
+ "cross_rate_overall": 19.75
+}
